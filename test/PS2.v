@@ -11,7 +11,7 @@ module PS2 (
 );
 
 reg ps2_clk_flag0, ps2_clk_flag1, ps2_clk_flag2;
-reg [7:0] tempdata;
+reg [7:0] temp_data;
 reg [9:0] data;
 reg data_break, data_done, data_expand;
 reg [3:0] num;
