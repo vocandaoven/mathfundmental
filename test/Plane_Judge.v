@@ -8,14 +8,17 @@ module Plane_Judge (
     output EN,
     output reg [11:0] rgb
 );
-
+    
     reg [9:0] p_x_next,p_y_next;
     reg EN_reg;
     reg [7:0] invincible_time,invincible_time_next;
     wire [11:0] plane_rgb;
     wire [9:0] col,row;
 
-    //Plane_mem m0 (.clka(clk),.addra(col + row * 32),.douta(plane_rgb));
+    assign col = x - p_x;
+    assign row = y - p_y;
+
+    plane_mem m0 (.clka(clk),.addra(col + row * 50),.douta(plane_rgb));
 
     always @(posedge clk or posedge rst) begin
         if(rst) begin
@@ -54,11 +57,11 @@ module Plane_Judge (
             end 
         endcase
         EN_reg = 0;
-        if(invincible_time)rgb = 12'b000010001111;
-        else rgb = 12'b100011110000;
-        if(plane_rgb != 12'b111100000000)EN_reg = 1;
+        if(invincible_time)rgb <= 12'b000010001111;
+        else rgb <= plane_rgb;
+        if(plane_rgb != 12'b111111111111)EN_reg = 1;
     end
 
-    assign EN = (x >= p_x && x < p_x + 50 && y >= p_y && y < p_y + 50);
+    assign EN = (x >= p_x && x < p_x + 50 && y >= p_y && y < p_y + 50 & EN_reg);
 
 endmodule
