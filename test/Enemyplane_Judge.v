@@ -10,13 +10,13 @@ module Enemyplane_Judge (
 
     reg [9:0] e_next_x,e_next_y;
     reg EN_reg;
-    reg [11:0] enemy_rgb;
+    wire [11:0] enemy_rgb;
     wire [9:0] col,row;
 
     assign col = x - enemy_x;
     assign row = y - enemy_y;
 
-    enemyplane_mem m0 (.clka(clk),.addra(col + row * 50),.douta(enemy_rgb));
+    enemyplane_mem Enemy (.clka(clk),.addra(col + row * 50),.douta(enemy_rgb));
 
     always @(posedge clk or posedge rst) begin
         if(rst)begin
@@ -31,13 +31,16 @@ module Enemyplane_Judge (
 
     always @(posedge clk_move) begin
         e_next_x <= enemy_x;
-        if(enemy < 430) begin
+        if(enemy_y < 430) begin
             e_next_y <= enemy_y + 1;
         end
         else begin
             e_next_x <= {$random} % 590;
             e_next_y <= 0;
         end
+    end
+    
+    always @* begin
         EN_reg <= 0;
         rgb <= enemy_rgb;
         if(enemy_rgb != 12'b111111111111)EN_reg <= 1;

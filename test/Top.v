@@ -7,8 +7,8 @@ module Top (
     output hsync
 );
 
-    assign BTN_X = 0;
-    wire clk_out,clk_move;
+    wire clk_out,clk_move,
+                 clk_move_bullet;
     wire [11:0] background_rgb,
                 start_rgb,
                 myplane_rgb,
@@ -36,6 +36,7 @@ module Top (
 
     clk_wiz_0 m1 (.clk_in1(clk),.reset(rst),.clk_out1(clk_out),.locked()); //output the clk of 25.175Mhz using MMCM
     clk_10ms CLK_MOVE (.clk(clk),.clk_10ms(clk_move));
+    clk_2ms CLK_MOVE_BULLET (.clk(clk),.clk_2ms(clk_move_bullet));
 
     PS2 KeyBoard
         (.clk(clk),.rst(rst),.ps2_data(ps2_data),.ps2_clk(ps2_clk),.up(direction[0]),.down(direction[1]),.left(direction[2]),.right(direction[3]),.enter());
@@ -44,11 +45,11 @@ module Top (
           (.clk(clk_out),.clk_move(clk_move),.rst(rst),.x(x),.y(y),.boom(boom),.direction(direction),.p_x(myplane_x),.p_y(myplane_y),.EN(myplane_en),.rgb(myplane_rgb));
 
     //Bullet Judge
-        // Bullet_Judge MyBullet (.clk(clk_out),.clk2(clk_move),.rst(rst),.x(x),.y(y),
+        // Bullet_Judge MyBullet (.clk(clk_out),.clk2(clk_move_bullet),.rst(rst),.x(x),.y(y),
         // .p_x(myplane_x),.p_y(myplane_y + 10'd480),.startp_x(myplane_x + 23),.startp_y(myplane_y + 10'd520),.boom(boom),
         // .b_x(mybullet_x),.b_y(mybullet_y),.mybullet_en(mybullet_en),.mybullet_rgb(mybullet_rgb));
 
-    Enemyplane_Judge Enemyplane (.clk(clk),.rst(rst),.clk_move(clk_move),.x(x),.y(y),.boom(boom),
+    Enemyplane_Judge Enemyplane (.clk(clk_out),.rst(rst),.clk_move(clk_move),.x(x),.y(y),.boom(boom),
                                 .enemy_x(enemy_x),.enemy_y(enemy_y),.rgb(enemy_rgb),.enemy_en(enemy_en));
 
     background_mem Background (.clka(clk_out),.addra(y*640+x),.douta(background_rgb));

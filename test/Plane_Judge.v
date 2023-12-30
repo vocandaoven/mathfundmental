@@ -18,7 +18,7 @@ module Plane_Judge (
     assign col = x - p_x;
     assign row = y - p_y;
 
-    plane_mem m0 (.clka(clk),.addra(col + row * 50),.douta(plane_rgb));
+    plane_mem Plane (.clka(clk),.addra(col + row * 50),.douta(plane_rgb));
 
     always @(posedge clk or posedge rst) begin
         if(rst) begin
@@ -56,10 +56,13 @@ module Plane_Judge (
                 if(p_y < 480-50) p_y_next <= p_y + 1;
             end 
         endcase
-        EN_reg = 0;
+    end
+    
+    always @* begin
+        EN_reg <= 0;
         if(invincible_time)rgb <= 12'b000010001111;
         else rgb <= plane_rgb;
-        if(plane_rgb != 12'b111111111111)EN_reg = 1;
+        if(plane_rgb != 12'b111111111111)EN_reg <= 1;
     end
 
     assign EN = (x >= p_x && x < p_x + 50 && y >= p_y && y < p_y + 50 & EN_reg);
