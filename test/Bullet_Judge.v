@@ -28,6 +28,7 @@ module Bullet_Judge (
         b_x_next <= b_x;
         b_y_next <= b_y;
         if(b_y + 480 < p_y)begin
+            b_x_next <= p_x + 10'd23;
             b_y_next <= p_y + 10'd40;
         end
         else begin
