@@ -28,7 +28,10 @@ module Top (
          mybullet_en,
          enemybullet_en,
          boss_en,
-         play_en;
+         play_en,
+         end_en;
+    wire [4:0] myHP,
+               enemyHP;
     wire boom;
     wire [3:0] direction;
     wire [9:0] x,y;
@@ -41,13 +44,18 @@ module Top (
     PS2 KeyBoard
         (.clk(clk),.rst(rst),.ps2_data(ps2_data),.ps2_clk(ps2_clk),.up(direction[0]),.down(direction[1]),.left(direction[2]),.right(direction[3]),.enter());
 
+    //BOOM_JUDGE
+
+    //Heart_Judge
+
+
     Plane_Judge MyPlane 
           (.clk(clk_out),.clk_move(clk_move),.rst(rst),.x(x),.y(y),.boom(boom),.direction(direction),.p_x(myplane_x),.p_y(myplane_y),.EN(myplane_en),.rgb(myplane_rgb));
 
-    //Bullet Judge
-        // Bullet_Judge MyBullet (.clk(clk_out),.clk2(clk_move_bullet),.rst(rst),.x(x),.y(y),
-        // .p_x(myplane_x),.p_y(myplane_y + 10'd480),.startp_x(myplane_x + 23),.startp_y(myplane_y + 10'd520),.boom(boom),
-        // .b_x(mybullet_x),.b_y(mybullet_y),.mybullet_en(mybullet_en),.mybullet_rgb(mybullet_rgb));
+//    Bullet Judge
+    Bullet_Judge MyBullet (.clk(clk_out),.clk2(clk_move_bullet),.rst(rst),.x(x),.y(y),
+        .p_x(myplane_x),.p_y(myplane_y + 10'd480),.startp_x(myplane_x + 23),.startp_y(myplane_y + 10'd520),.boom(boom),
+        .b_x(mybullet_x),.b_y(mybullet_y),.mybullet_en(mybullet_en),.mybullet_rgb(mybullet_rgb));
 
     Enemyplane_Judge Enemyplane (.clk(clk_out),.rst(rst),.clk_move(clk_move),.x(x),.y(y),.boom(boom),
                                 .enemy_x(enemy_x),.enemy_y(enemy_y),.rgb(enemy_rgb),.enemy_en(enemy_en));
