@@ -17,6 +17,7 @@ module Enemyplane_Judge (
     assign row = y - enemy_y;
 
     enemyplane_mem Enemy (.clka(clk),.addra(col + row * 50),.douta(enemy_rgb));
+    //BOMM_MEM
 
     always @(posedge clk or posedge rst) begin
         if(rst)begin

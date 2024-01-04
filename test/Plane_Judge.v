@@ -12,13 +12,14 @@ module Plane_Judge (
     reg [9:0] p_x_next,p_y_next;
     reg EN_reg;
     reg [7:0] invincible_time,invincible_time_next;
-    wire [11:0] plane_rgb;
+    wire [11:0] plane_rgb,boom_rgb;
     wire [9:0] col,row;
 
     assign col = x - p_x;
     assign row = y - p_y;
 
     plane_mem Plane (.clka(clk),.addra(col + row * 50),.douta(plane_rgb));
+    //boom_mem Boom (.clka(clk),.addra(col + row * 50),.douta(boom_rgb));
 
     always @(posedge clk or posedge rst) begin
         if(rst) begin
