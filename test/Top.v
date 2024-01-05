@@ -70,7 +70,7 @@ module Top (
 
     My_Boom_Judge MyBoom (.clk(clk_out), .rst(rst), .clk2(clk_move_bullet), .enemy_bullet_en(eb_exist), .my_en(mp_exist), 
                           .p_x(myplane_x), .p_y(myplane_y), .eb_x(ebullet_x), .eb_y(ebullet_y), .my_health(4'b0011), 
-                          .boom(p_boom), .present_eb_en(eb_boom) .present_health(present_health) );
+                          .boom(p_boom), .present_eb_en(eb_boom), .present_health(present_health) );
     
     Enemy_Boom_Judge EnemyBoom (.clk(clk_out), .rst(rst), .clk2(clk_move_bullet), .mybullet_en(mb_exist), .enemy_en(ep_exist), 
                                 .ep_x(enemy_x), .ep_y(enemy_y), .b_x(mybullet_x), .b_y(mybullet_y), .enemy_health(3'b001), 
