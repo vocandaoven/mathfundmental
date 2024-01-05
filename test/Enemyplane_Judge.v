@@ -11,9 +11,10 @@ module Enemyplane_Judge (
 
     reg [9:0] e_next_x,e_next_y;
     reg EN_reg;
-    wire [11:0] enemy_rgb;
+    wire [11:0] enemy_rgb,boom_rgb;
     wire [9:0] col,row;
     reg [3:0] boom_count; 
+    assign boom_rgb = 12'b100101101001;
 
     assign col = x - enemy_x;
     assign row = y - enemy_y;
@@ -68,6 +69,7 @@ module Enemyplane_Judge (
         else begin
             rgb <= enemy_rgb;
             if(enemy_rgb != 12'b111111111111 && boom_count != 4'b1111) EN_reg <= 1;
+        end
     end
 
     assign enemy_en = (EN_reg && x >= enemy_x && x < enemy_x + 50 && y >= enemy_y && y < enemy_y + 50 && EN_reg);

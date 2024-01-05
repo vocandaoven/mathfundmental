@@ -6,8 +6,8 @@ module Enemy_Boom_Judge (
     input mybullet_en,
     input enemy_en,
     input [2:0] enemy_health,
-    output boom
-)
+    output reg boom
+);
     reg [9:0] fake_ep_x;
     reg [9:0] fake_ep_y;
     reg [2:0] present_health;

@@ -6,9 +6,9 @@ module My_Boom_Judge (
     input enemy_bullet_en,
     input my_en,
     input [3:0] my_health,
-    output boom,
-    output [3:0] present_health
-)
+    output reg boom,
+    output reg [3:0] present_health
+);
     reg [9:0] fake_mp_x;
     reg [9:0] fake_mp_y;
     reg present_eb_en;

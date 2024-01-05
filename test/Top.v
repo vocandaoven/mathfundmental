@@ -41,9 +41,11 @@ module Top (
          mb_exist,
          ep_exist,
          eb_exist,
-         p_boom,
-         ep_boom;
+         health_EN1,
+         health_EN2,
+         health_EN3;
 
+    wire p_boom,ep_boom;
     wire [3:0] present_health;
 
     wire [3:0] direction;
@@ -67,7 +69,7 @@ module Top (
     //Boom Judge
 
     My_Boom_Judge MyBoom (.clk(clk_out), .rst(rst), .clk2(clk_move_bullet), .enemy_bullet_en(eb_exist), .my_en(mp_exist), 
-                          .p_x(myplane_x), .p_y(myplane_y), .eb_x(ebullet_x), eb_y(ebullet_y), ,my_health(4'b0011), 
+                          .p_x(myplane_x), .p_y(myplane_y), .eb_x(ebullet_x), .eb_y(ebullet_y), .my_health(4'b0011), 
                           .boom(p_boom), .present_health(present_health) );
     
     Enemy_Boom_Judge EnemyBoom (.clk(clk_out), .rst(rst), .clk2(clk_move_bullet), .mybullet_en(mb_exist), .enemy_en(ep_exist), 
@@ -116,8 +118,8 @@ module Top (
         if(!play_en) rgb_reg = start_rgb;
         else begin
             if(health_EN1) rgb_reg = health1_rgb;
-            else if(health_EN2) rgb_reg = health2_rgb;
-            else if(health_EN3) rgb_reg = health3_rgb;
+            if(health_EN2) rgb_reg = health2_rgb;
+            if(health_EN3) rgb_reg = health3_rgb;
             if(myplane_en) rgb_reg = myplane_rgb;
             else if(enemy_en) rgb_reg = enemy_rgb;
             else if(boss_en) rgb_reg = boss_rgb;

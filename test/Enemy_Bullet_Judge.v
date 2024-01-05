@@ -12,6 +12,7 @@ module Enemy_Bullet_Judge (
 );
 
     reg [9:0] eb_x_next,eb_y_next;
+    reg [9:0] counter;
     reg EN_reg;
     reg boom_EN;
 
@@ -35,16 +36,21 @@ module Enemy_Bullet_Judge (
         else begin
             eb_x_next <= eb_x;
             eb_y_next <= eb_y;
-            if(eb_y + 480 > ep_y)begin
+            if(counter == 640)begin
                 eb_x_next <= ep_x + 10'd23;
                 eb_y_next <= ep_y + 10'd40;
                 boom_EN <= 1'b1;
+                counter <= 0;
             end
             else begin
                 eb_y_next <= eb_y + 1;  //enemy bullets fly downward
+                counter <= counter + 1;
                 if(boom) boom_EN <= 1'b0;
             end
         end
+    end
+    
+    always @* begin
         enemy_bullet_rgb <= 12'b111111111111;  //need to be specified
     end
 

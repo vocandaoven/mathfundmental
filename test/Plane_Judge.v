@@ -16,6 +16,8 @@ module Plane_Judge (
     wire [11:0] plane_rgb,boom_rgb;
     wire [9:0] col,row;
     reg [3:0] boom_count;
+    
+    assign boom_rgb = 12'b1000101101011;
 
     assign col = x - p_x;
     assign row = y - p_y;
@@ -90,6 +92,7 @@ module Plane_Judge (
         else begin
             rgb <= plane_rgb;
             if(plane_rgb != 12'b111111111111 && boom_count != 4'b1111) EN_reg <= 1;
+        end
     end
 
     assign EN = (x >= p_x && x < p_x + 50 && y >= p_y && y < p_y + 50 & EN_reg);
