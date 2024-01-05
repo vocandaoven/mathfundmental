@@ -23,6 +23,7 @@ module Enemy_Boom_Judge (
             present_mb_en <= mybullet_en;
         end
         else begin 
+            present_mb_en <= mybullet_en;
             fake_ep_x <= ep_x;
             fake_ep_y <= ep_y + 480;
             if(present_mb_en && present_health && enemy_en && b_x >= fake_ep_x - 10 && b_x < fake_ep_x + 50 && b_y > fake_ep_y - 50 && b_y < fake_ep_y + 40) begin

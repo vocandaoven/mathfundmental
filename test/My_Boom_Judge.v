@@ -24,6 +24,7 @@ module My_Boom_Judge (
         else begin 
             fake_mp_x <= p_x;
             fake_mp_y <= p_y + 480;
+            present_eb_en <= enemy_bullet_en;
             if(present_eb_en && present_health && my_en && fake_mp_x >= eb_x - 10 && fake_mp_x < eb_x + 50 && fake_mp_y >= eb_y - 50 && fake_mp_y < eb_y + 40) begin
                 present_eb_en <= 1'b0;
                 if(present_health > 4'b0) begin
