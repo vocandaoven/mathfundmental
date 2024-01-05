@@ -8,7 +8,7 @@ module Health_Judge (
     output health_EN1,
     output health_EN2,
     output health_EN3
-)
+);
 
     always @* begin
         health1_rgb <= 12'b000000001111;

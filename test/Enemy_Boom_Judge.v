@@ -6,6 +6,7 @@ module Enemy_Boom_Judge (
     input mybullet_en,
     input enemy_en,
     input [2:0] enemy_health,
+    output reg present_mb_en,
     output reg boom
 );
     reg [9:0] fake_ep_x;
@@ -22,9 +23,13 @@ module Enemy_Boom_Judge (
             present_mb_en <= mybullet_en;
         end
         else begin 
-            if(present_mb_en && present_health && enemy_en && fake_ep_x >= b_x - 10 && fake_ep_x < b_x + 50 && fake_ep_y >= b_y - 50 && fake_ep_y < b_y + 40) begin
+            fake_ep_x <= ep_x;
+            fake_ep_y <= ep_y + 480;
+            if(present_mb_en && present_health && enemy_en && b_x >= fake_ep_x - 10 && b_x < fake_ep_x + 50 && b_y > fake_ep_y - 50 && b_y < fake_ep_y + 40) begin
                 present_mb_en <= 1'b0;
-                present_health <= present_health - 1;
+                if(present_health > 3'b0) begin
+                    present_health <= present_health - 1;
+                end
             end else begin
                 present_health <= present_health;
             end
