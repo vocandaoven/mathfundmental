@@ -11,9 +11,9 @@ module Health_Judge (
 );
 
     always @* begin
-        health1_rgb <= 12'b000000001111;
-        health2_rgb <= 12'b000000001111;
-        health3_rgb <= 12'b000000001111;
+        health1_rgb <= 12'b111111111111;
+        health2_rgb <= 12'b111111111111;
+        health3_rgb <= 12'b111111111111;
     end
 
     assign health_EN1 = (x >= 420 && x <= 480 && y >= 460 && y <= 470 && present_health >= 4'b0001);
