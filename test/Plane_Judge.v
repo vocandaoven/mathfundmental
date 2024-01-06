@@ -15,7 +15,7 @@ module Plane_Judge (
     reg [7:0] invincible_time,invincible_time_next;
     wire [11:0] plane_rgb,boom_rgb;
     wire [9:0] col,row;
-    reg [3:0] boom_count;
+    reg [7:0] boom_count;
     
     assign boom_rgb = 12'b1000101101011;
 
@@ -41,7 +41,7 @@ module Plane_Judge (
 
     always @(posedge clk_move) begin
         p_x_next = p_x;
-        if(boom_count == 4'b0) begin
+        if(boom_count == 8'b0) begin
             case (direction)
                 4'b0100: begin
                     if(p_x > 0) p_x_next <= p_x - 1;
@@ -55,7 +55,7 @@ module Plane_Judge (
 
     always @(posedge clk_move) begin
         p_y_next = p_y;
-        if(boom_count == 4'b0) begin
+        if(boom_count == 8'b0) begin
             case (direction)
                 4'b0001:begin
                     if(p_y > 0)p_y_next <= p_y - 1;
@@ -71,31 +71,31 @@ module Plane_Judge (
 
     always @(posedge clk_move or posedge rst) begin
         if(rst) begin
-            boom_count <= 4'b0;
+            boom_count <= 8'b0;
         end
         else if(boom) begin
-            if(boom_count < 4'b1111) boom_count <= boom_count + 1;
+            if(boom_count < 8'b11111111) boom_count <= boom_count + 1;
             else boom_count <= boom_count;
         end
         else begin
-            boom_count <= 4'b0;
+            boom_count <= 8'b0;
         end
     end
 
     
     always @* begin
         EN_reg <= 0;
-        if(boom_count > 4'b0 && boom_count < 4'b1111) begin
+        if(boom_count > 8'b0 && boom_count < 8'b11111111) begin
             rgb <= boom_rgb;
             if(boom_rgb != 12'b111111111111) EN_reg <= 1;
         end
         else begin
             rgb <= plane_rgb;
-            if(plane_rgb != 12'b111111111111 && boom_count != 4'b1111) EN_reg <= 1;
+            if(plane_rgb != 12'b111111111111 && boom_count != 8'b11111111) EN_reg <= 1;
         end
     end
 
     assign EN = (x >= p_x && x < p_x + 50 && y >= p_y && y < p_y + 50 & EN_reg);
-    assign myplane_exist = (boom_count == 4'b0);
+    assign myplane_exist = (boom_count == 8'b0);
 
 endmodule

@@ -4,16 +4,16 @@ module Bullet_Judge (
     input [9:0] p_x,p_y,
     input [9:0] startp_x,startp_y,
     input [9:0] x,y,
-    input boom,
+    input collide,  //0 for my bullet collide, 1 for my bullet exist
     output reg [9:0] b_x,b_y,
-    output mybullet_en,
-    output mybullet_exist,
+    output mybullet_en,  //1 for my bullet can show on the VGA
+    output mybullet_exist,  //1 for my bullet exist
     output reg [11:0] mybullet_rgb
 );
 
     reg [9:0] b_x_next,b_y_next;
     reg EN_reg;
-    reg boom_EN;
+    reg collide_EN;  //1 for my bullet collide, 0 for my bullet exist
 
     always @(posedge clk or posedge rst) begin
         if(rst) begin
@@ -30,17 +30,17 @@ module Bullet_Judge (
         if(rst)begin
             b_x_next <= startp_x;
             b_y_next <= startp_y;
-            boom_EN <= 1'b1;
+            collide_EN <= 1'b0;
         end
         else if(b_y + 480 < p_y) begin
             b_x_next <= p_x + 10'd23;
             b_y_next <= p_y - 10'd40;
-            boom_EN <= 1'b1;
+            collide_EN <= 1'b0;
         end
         else begin
             b_x_next <= b_x;
             b_y_next <= b_y - 1;
-            if(boom) boom_EN <= 1'b0;
+            if(~collide) collide_EN <= 1'b1;
         end
     end
 
@@ -48,7 +48,7 @@ module Bullet_Judge (
         mybullet_rgb <= 12'b111111111111;
     end
 
-    assign mybullet_en = (x >= b_x && x < b_x + 10 && y + 480 >= b_y && y + 480 < b_y + 40 && b_y > 480 & boom_EN);
-    assign mybullet_exist = (boom_EN == 1'b1);
+    assign mybullet_en = (x >= b_x && x < b_x + 10 && y + 480 >= b_y && y + 480 < b_y + 40 && b_y > 480 & ~collide_EN);
+    assign mybullet_exist = (collide_EN == 1'b0);
     
 endmodule
