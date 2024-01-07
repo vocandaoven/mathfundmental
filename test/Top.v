@@ -18,6 +18,7 @@ module Top (
                 boss_rgb,
                 mybullet_rgb,
                 enemybullet_rgb,
+                bossbullet_rgb,
                 health1_rgb,
                 health2_rgb,
                 health3_rgb;
@@ -28,25 +29,28 @@ module Top (
                enemy_x,enemy_y,
                mybullet_x,mybullet_y,
                ebullet_x,ebullet_y,
-               boss_x,boss_y,
-               bossbu_x,bossbu_y;
+               bbullet_x, bbullet_y,
+               boss_x,boss_y;
 
     wire myplane_en, // Determine at the position (x,y) ,output what element
          enemy_en,
          mybullet_en,
          enemybullet_en,
+         bossbullet_en,
          boss_en,
          end_en,
          mp_exist,
          mb_exist,
          ep_exist,
          eb_exist,
+         bb_exist,
+         boss_exist,
          health_EN1,
          health_EN2,
          health_EN3;
 
-    wire p_boom, ep_boom, b_collide, eb_collide;
-    wire [3:0] present_health;
+    wire p_boom, ep_boom, b_boom, b_collide, eb_collide, bb_collide;
+    wire [3:0] present_health, present_bhealth;
     reg play_en;
 
     wire [3:0] direction;
@@ -69,13 +73,17 @@ module Top (
 
     //Boom Judge
 
-    My_Boom_Judge MyBoom (.clk(clk_out), .rst(rst), .clk2(clk_move_bullet), .enemy_bullet_en(eb_exist), .my_en(mp_exist), 
-                          .p_x(myplane_x), .p_y(myplane_y), .eb_x(ebullet_x), .eb_y(ebullet_y), .my_health(4'b0011), 
-                          .boom(p_boom), .present_eb_en(eb_collide), .present_health(present_health) );
+    My_Boom_Judge MyBoom (.clk(clk_out), .rst(rst), .clk2(clk_move_bullet), .enemy_bullet_en(eb_exist), .boss_bullet_en(bb_exist), .my_en(mp_exist), 
+                          .p_x(myplane_x), .p_y(myplane_y), .eb_x(ebullet_x), .eb_y(ebullet_y), .bb_x(bbullet_x), .bb_y(bbullet_y), .my_health(4'b0011), 
+                          .boom(p_boom), .present_eb_en(eb_collide), .present_bb_en(bb_collide), .present_health(present_health) );
     
     Enemy_Boom_Judge EnemyBoom (.clk(clk_out), .rst(rst), .clk2(clk_move_bullet), .mybullet_en(mb_exist), .enemy_en(ep_exist), 
                                 .ep_x(enemy_x), .ep_y(enemy_y), .b_x(mybullet_x), .b_y(mybullet_y), .enemy_health(3'b001), 
                                 .present_mb_en(b_collide), .boom(ep_boom) );
+
+    Boss_Boom_Judge BossBoom (.clk(clk_out), .rst(rst), .clk2(clk_move_bullet), .mybullet_en(mb_exist), .boss_en(boss_exist), 
+                              .boss_x(boss_x), .boss_y(boss_y), .b_x(mybullet_x), .b_y(mybullet_y), .boss_health(4'b1000), 
+                              .present_bhealth(present_bhealth), .boom(b_boom), .present_bb_en(bb_collide) );
 
     //Heart Judge
 
@@ -93,6 +101,9 @@ module Top (
     Enemyplane_Judge Enemyplane (.clk(clk_out), .rst(rst), .clk_move(clk_move), .x(x), .y(y), .boom(ep_boom),
                                 .enemy_x(enemy_x), .enemy_y(enemy_y), .rgb(enemy_rgb), .enemy_en(enemy_en), .enemyplane_exist(ep_exist) );
 
+    Boss_Judge BossPlane (.clk(clk_out), .rst(rst), .clk_move(clk_move), .x(x), .y(y), .boom(b_boom),
+                          .boss_x(boss_x), .boss_y(boss_y), .rgb(boss_rgb), .boss_EN(boss_en), .boss_exist(boss_exist) );
+
 
     //Bullets Judge
 
@@ -103,6 +114,10 @@ module Top (
     Enemy_Bullet_Judge EnemyBullet (.clk(clk_out), .rst(rst), .clk2(clk_move_bullet), .x(x), .y(y), .enemyplane_exist(ep_exist),
                                     .ep_x(enemy_x), .ep_y(enemy_y + 10'd480), .startep_x(enemy_x + 23), .startep_y(enemy_y + 10'd520), .collide(eb_collide),
                                     .eb_x(ebullet_x), .eb_y(ebullet_y), .enemy_bullet_en(enemybullet_en), .enemy_bullet_rgb(enemybullet_rgb), .enemybullet_exist(eb_exist) );
+
+    Boss_Bullet_Judge BossBullet (.clk(clk_out), .rst(rst), .clk2(clk_move_bullet), .x(x), .y(y), .boss_exist(boss_exist),
+                                  .boss_x(boss_x), .boss_y(boss_y + 10'd480), .startboss_x(boss_x + 54), .startboss_y(boss_y + 10'd540), .collide(bb_collide),
+                                  .bb_x(bbullet_x), .bb_y(bbullet_y), .boss_bullet_en(bossbullet_en), .boss_bullet_rgb(bossbullet_rgb), .bossbullet_exist(bb_exist) );
 
     //Maps Judge
 
@@ -133,6 +148,14 @@ module Top (
             else if(health_EN1) rgb_reg = health1_rgb;
             else if(health_EN2) rgb_reg = health2_rgb;
             else if(health_EN3) rgb_reg = health3_rgb;
+            else if(bhealth_EN1) rgb_reg = health1_rgb;
+            else if(bhealth_EN2) rgb_reg = health1_rgb;
+            else if(bhealth_EN3) rgb_reg = health1_rgb;
+            else if(bhealth_EN4) rgb_reg = health1_rgb;
+            else if(bhealth_EN5) rgb_reg = health1_rgb;
+            else if(bhealth_EN6) rgb_reg = health1_rgb;
+            else if(bhealth_EN7) rgb_reg = health1_rgb;
+            else if(bhealth_EN8) rgb_reg = health1_rgb;
             else if(enemy_en) rgb_reg = enemy_rgb;
             else if(boss_en) rgb_reg = boss_rgb;
             else if(mybullet_en) rgb_reg = mybullet_rgb;
