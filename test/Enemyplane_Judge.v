@@ -2,6 +2,7 @@ module Enemyplane_Judge (
     input clk,rst,
     input clk_move,
     input boom,
+    input revive,
     input [9:0] x,y,
     output reg [9:0] enemy_x,enemy_y,
     output reg [11:0] rgb,
@@ -15,17 +16,16 @@ module Enemyplane_Judge (
     wire [9:0] col,row;
     reg [7:0] boom_count; 
     reg [31:0] seed_count;  //create the seed of random numbers
-    assign boom_rgb = 12'b100101101001;
 
     assign col = x - enemy_x;
     assign row = y - enemy_y;
 
     enemyplane_mem Enemy (.clka(clk),.addra(col + row * 50),.douta(enemy_rgb));
-    //boom_mem Boom (.clka(clk),.addra(col + row * 50),.douta(boom_rgb));
+    explode_mem Boom (.clka(clk),.addra(col + row * 50),.douta(boom_rgb));
 
     always @(posedge clk or posedge rst) begin
         if(rst)begin
-            enemy_x <= {$random} % 590;
+            enemy_x <= 120-25;
             enemy_y <= 0;
             seed_count <= 32'b0;
         end
@@ -40,11 +40,15 @@ module Enemyplane_Judge (
         e_next_x <= enemy_x;
         e_next_y <= enemy_y;
         if(boom_count == 8'b0) begin
-            if(enemy_y < 430) begin
+            if(revive) begin
+                e_next_x <= 120-25;
+                e_next_y <= 0;
+            end
+            else if(enemy_y < 430) begin
                 e_next_y <= enemy_y + 1;
             end
             else begin
-                e_next_x <= {$random(seed_count)} % 590;
+                e_next_x <= 120-25;
                 e_next_y <= 0;
             end
         end

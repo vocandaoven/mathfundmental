@@ -14,6 +14,13 @@ module Bullet_Judge (
     reg [9:0] b_x_next,b_y_next;
     reg EN_reg;
     reg collide_EN;  //1 for my bullet collide, 0 for my bullet exist
+    wire [11:0] bullet_rgb;
+    wire [9:0] col,row;
+    
+    assign row = y + 480 - b_y;
+    assign col = x - b_x;
+    
+    bullet_mem Bullet (.clka(clk),.addra(col + row * 10),.douta(bullet_rgb));
 
     always @(posedge clk or posedge rst) begin
         if(rst) begin
@@ -45,7 +52,7 @@ module Bullet_Judge (
     end
 
     always @* begin
-        mybullet_rgb <= 12'b111111111111;
+        mybullet_rgb <= bullet_rgb;
     end
 
     assign mybullet_en = (x >= b_x && x < b_x + 10 && y + 480 >= b_y && y + 480 < b_y + 40 && b_y > 480 & ~collide_EN);

@@ -15,7 +15,7 @@ module clk_2ms(
 	assign cnt_next = cnt + 1'b1;
 
 	always @(posedge clk) begin
-		if(cnt<5_000_0)begin
+		if(cnt<10_000_0)begin
 			cnt <= cnt_next;
 		end
 		else begin

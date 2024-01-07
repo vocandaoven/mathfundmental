@@ -6,6 +6,7 @@ module Enemy_Boom_Judge (
     input mybullet_en,  //1 for my bullet exist
     input enemy_en,  //1 for enemy palne exist
     input [2:0] enemy_health,
+    output reg revive,
     output reg present_mb_en,  //1 for my bullet still exist
     output reg boom  //1 for enemy plane boom
 );
@@ -17,6 +18,7 @@ module Enemy_Boom_Judge (
 
     always@(posedge clk or posedge rst) begin
          if(rst) begin
+            revive <= 1'b0;
             present_health <= enemy_health;
             fake_ep_x <= ep_x;
             fake_ep_y <= ep_y + 480;
@@ -42,8 +44,16 @@ module Enemy_Boom_Judge (
                 end
                 if(boom) begin
                     reset_count <= reset_count + 1;
-                    if(reset_count > 32'h000FFFFF) begin
+                    if(reset_count > 32'h03FFFFFF) begin
                         present_health <= enemy_health;
+                        revive <= 1'b1;
+                        reset_count <= 32'b0;
+                    end
+                end
+                else if(revive) begin
+                    reset_count <= reset_count + 1;
+                    if(reset_count > 375000) begin
+                        revive <= 1'b0;
                         reset_count <= 32'b0;
                     end
                 end
@@ -64,4 +74,3 @@ module Enemy_Boom_Judge (
     end
 
 endmodule
-

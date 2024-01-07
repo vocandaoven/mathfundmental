@@ -16,6 +16,13 @@ module Enemy_Bullet_Judge (
     reg [9:0] counter;
     reg EN_reg;
     reg collide_EN;  //1 for enemy bullet collide, 0 for enemy bullet exist
+    wire [11:0] bullet_rgb;
+    wire [9:0] col,row;
+    
+    assign row = y + 480 - eb_y;
+    assign col = x - eb_x;
+    
+    eb_mem Bullet (.clka(clk),.addra(col + row * 10),.douta(bullet_rgb));
 
     always @(posedge clk or posedge rst) begin
         if(rst) begin
@@ -52,7 +59,7 @@ module Enemy_Bullet_Judge (
     end
     
     always @* begin
-        enemy_bullet_rgb <= 12'b111111111111;  //need to be specified
+        enemy_bullet_rgb <= bullet_rgb;  //need to be specified
     end
 
     assign enemy_bullet_en = (x >= eb_x && x < eb_x + 10 && y + 480 >= eb_y && y + 480 < eb_y + 40 && eb_y <= 960 & ~collide_EN & enemyplane_exist);

@@ -1,5 +1,5 @@
 module Top (
-    input clk,
+    input clk,rst,
     input ps2_clk,ps2_data,
     output [11:0] rgb,
     output vsync,
@@ -9,7 +9,7 @@ module Top (
     wire clk_out,clk_move,
                  clk_move_bullet;
 
-    wire rst;
+    wire play_rst;
 
     wire [11:0] background_rgb,
                 start_rgb,
@@ -36,7 +36,6 @@ module Top (
          mybullet_en,
          enemybullet_en,
          boss_en,
-         play_en,
          end_en,
          mp_exist,
          mb_exist,
@@ -48,6 +47,7 @@ module Top (
 
     wire p_boom, ep_boom, b_collide, eb_collide;
     wire [3:0] present_health;
+    reg play_en;
 
     wire [3:0] direction;
 
@@ -65,7 +65,7 @@ module Top (
     //PS2 module
 
     PS2 KeyBoard
-        (.clk(clk),.rst(rst),.ps2_data(ps2_data),.ps2_clk(ps2_clk),.up(direction[0]),.down(direction[1]),.left(direction[2]),.right(direction[3]),.enter(rst));
+        (.clk(clk),.rst(rst),.ps2_data(ps2_data),.ps2_clk(ps2_clk),.up(direction[0]),.down(direction[1]),.left(direction[2]),.right(direction[3]),.enter(play_rst));
 
     //Boom Judge
 
@@ -107,18 +107,28 @@ module Top (
     //Maps Judge
 
     background_mem Background (.clka(clk_out),.addra(y*640+x),.douta(background_rgb));
+    start_mem Start (.clka(clk_out),.addra(y*640+x),.douta(start_rgb));
 
     //VGA module
 
     Test m0 (.clk(clk_out),.rst(rst),.Din(select_rgb),.rgb(rgb),.vsync(vsync),.hsync(hsync),.x(x),.y(y),.EN());
 
 
-    assign play_en = 1;
+    always @(posedge clk or posedge rst) begin
+        if(rst)begin
+            play_en <= 0;
+        end
+        else if(play_rst) begin
+            play_en <= 1;
+        end 
+        else begin
+            play_en <= play_en;
+        end
+    end
 
     always @* begin
         if(!play_en) rgb_reg = start_rgb;
         else begin
-
             if(myplane_en) rgb_reg = myplane_rgb;
             else if(health_EN1) rgb_reg = health1_rgb;
             else if(health_EN2) rgb_reg = health2_rgb;

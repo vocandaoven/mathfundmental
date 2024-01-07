@@ -35,7 +35,7 @@ module My_Boom_Judge (
             else begin
                 present_health <= present_health;
                 collide_count <= collide_count + 1;
-                if(collide_count > 10_000_0) begin
+                if(collide_count > 15_000_0) begin
                     present_eb_en <= enemy_bullet_en;
                     collide_count <= 32'b0;
                 end
