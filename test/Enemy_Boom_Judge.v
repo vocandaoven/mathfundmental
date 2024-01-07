@@ -12,6 +12,8 @@ module Enemy_Boom_Judge (
     reg [9:0] fake_ep_x;
     reg [9:0] fake_ep_y;
     reg [2:0] present_health;
+    reg [31:0] collide_count;
+    reg [31:0] reset_count;
 
     always@(posedge clk or posedge rst) begin
          if(rst) begin
@@ -20,6 +22,8 @@ module Enemy_Boom_Judge (
             fake_ep_y <= ep_y + 480;
             present_health <= enemy_health;
             present_mb_en <= mybullet_en;
+            collide_count <= 32'b0;
+            reset_count <= 32'b0;
         end
         else begin 
             fake_ep_x <= ep_x;
@@ -31,7 +35,18 @@ module Enemy_Boom_Judge (
                 end
             end else begin
                 present_health <= present_health;
-                present_mb_en <= mybullet_en;
+                collide_count <= collide_count + 1;
+                if(collide_count > 15_000_0) begin
+                    present_mb_en <= mybullet_en;
+                    collide_count <= 32'b0;
+                end
+                if(boom) begin
+                    reset_count <= reset_count + 1;
+                    if(reset_count > 32'h000FFFFF) begin
+                        present_health <= enemy_health;
+                        reset_count <= 32'b0;
+                    end
+                end
             end
         end
     end 
