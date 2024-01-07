@@ -3,7 +3,11 @@ module Top (
     input ps2_clk,ps2_data,
     output [11:0] rgb,
     output vsync,
-    output hsync
+    output hsync,
+    output seg_clk,
+    output seg_clrn,
+    output seg_EN,
+    output seg_out
 );
 
     wire clk_out,clk_move,
@@ -47,7 +51,15 @@ module Top (
          boss_exist,
          health_EN1,
          health_EN2,
-         health_EN3;
+         health_EN3,
+         bhealth_EN1,
+         bhealth_EN2,
+         bhealth_EN3,
+         bhealth_EN4,
+         bhealth_EN5,
+         bhealth_EN6,
+         bhealth_EN7,
+         bhealth_EN8;
 
     wire p_boom, ep_boom, b_boom, b_collide, eb_collide, bb_collide;
     wire [3:0] present_health, present_bhealth;
@@ -89,7 +101,9 @@ module Top (
 
     Health_Judge MyHealth (.clk(clk_out), .rst(rst), .x(x), .y(y), .present_health(present_health), 
                            .health1_rgb(health1_rgb), .health2_rgb(health2_rgb), .health3_rgb(health3_rgb), 
-                           .health_EN1(health_EN1), .health_EN2(health_EN2), .health_EN3(health_EN3) );
+                           .health_EN1(health_EN1), .health_EN2(health_EN2), .health_EN3(health_EN3),
+                           .bhealth_EN1(bhealth_EN1), .bhealth_EN2(bhealth_EN2), .bhealth_EN3(bhealth_EN3), .bhealth_EN4(bhealth_EN4), 
+                           .bhealth_EN5(bhealth_EN5), .bhealth_EN6(bhealth_EN6), .bhealth_EN7(bhealth_EN7), .bhealth_EN8(bhealth_EN8) );
 
     //Planes Judge 
 
@@ -127,6 +141,9 @@ module Top (
     //VGA module
 
     Test m0 (.clk(clk_out),.rst(rst),.Din(select_rgb),.rgb(rgb),.vsync(vsync),.hsync(hsync),.x(x),.y(y),.EN());
+
+    //Score module
+    Score myscore (.clk(clk), .rst(rst), .score(score), .seg_clk(seg_clk), .seg_clrn(seg_clrn), .seg_EN(seg_EN), .seg_out(seg_out));
 
 
     always @(posedge clk or posedge rst) begin
