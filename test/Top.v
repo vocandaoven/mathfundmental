@@ -119,7 +119,7 @@ module Top (
         else begin
 
             if(myplane_en) rgb_reg = myplane_rgb;
-            else begin
+            else if(present_health > 4'b0) begin
                 if(health_EN1) rgb_reg = health1_rgb;
                 if(health_EN2) rgb_reg = health2_rgb;
                 if(health_EN3) rgb_reg = health3_rgb;
