@@ -1,6 +1,5 @@
 module Top (
     input clk,
-    input rst,
     input ps2_clk,ps2_data,
     output [11:0] rgb,
     output vsync,
@@ -9,6 +8,8 @@ module Top (
 
     wire clk_out,clk_move,
                  clk_move_bullet;
+
+    wire rst;
 
     wire [11:0] background_rgb,
                 start_rgb,
@@ -64,7 +65,7 @@ module Top (
     //PS2 module
 
     PS2 KeyBoard
-        (.clk(clk),.rst(rst),.ps2_data(ps2_data),.ps2_clk(ps2_clk),.up(direction[0]),.down(direction[1]),.left(direction[2]),.right(direction[3]),.enter());
+        (.clk(clk),.rst(rst),.ps2_data(ps2_data),.ps2_clk(ps2_clk),.up(direction[0]),.down(direction[1]),.left(direction[2]),.right(direction[3]),.enter(rst));
 
     //Boom Judge
 
