@@ -117,10 +117,13 @@ module Top (
     always @* begin
         if(!play_en) rgb_reg = start_rgb;
         else begin
-            if(health_EN1) rgb_reg = health1_rgb;
-            if(health_EN2) rgb_reg = health2_rgb;
-            if(health_EN3) rgb_reg = health3_rgb;
+
             if(myplane_en) rgb_reg = myplane_rgb;
+            else begin
+                if(health_EN1) rgb_reg = health1_rgb;
+                if(health_EN2) rgb_reg = health2_rgb;
+                if(health_EN3) rgb_reg = health3_rgb;
+            end
             else if(enemy_en) rgb_reg = enemy_rgb;
             else if(boss_en) rgb_reg = boss_rgb;
             else if(mybullet_en) rgb_reg = mybullet_rgb;
