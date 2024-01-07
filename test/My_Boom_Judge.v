@@ -12,6 +12,8 @@ module My_Boom_Judge (
 );
     reg [9:0] fake_mp_x;
     reg [9:0] fake_mp_y;
+    reg [31:0] collide_count;
+    
 
     always@(posedge clk or posedge rst) begin
          if(rst) begin
@@ -19,6 +21,7 @@ module My_Boom_Judge (
             fake_mp_x <= p_x;
             fake_mp_y <= p_y + 480;
             present_eb_en <= enemy_bullet_en;
+            collide_count <= 32'b0;
         end
         else begin 
             fake_mp_x <= p_x;
@@ -31,7 +34,11 @@ module My_Boom_Judge (
             end 
             else begin
                 present_health <= present_health;
-                present_eb_en <= enemy_bullet_en;
+                collide_count <= collide_count + 1;
+                if(collide_count > 10_000_0) begin
+                    present_eb_en <= enemy_bullet_en;
+                    collide_count <= 32'b0;
+                end
             end
         end
     end 

@@ -99,7 +99,7 @@ module Top (
         .p_x(myplane_x),.p_y(myplane_y + 10'd480),.startp_x(myplane_x + 23),.startp_y(myplane_y + 10'd440),.collide(b_collide),
         .b_x(mybullet_x),.b_y(mybullet_y),.mybullet_en(mybullet_en),.mybullet_rgb(mybullet_rgb), .mybullet_exist(mb_exist) );
 
-    Enemy_Bullet_Judge EnemyBullet (.clk(clk_out), .rst(rst), .clk2(clk_move_bullet), .x(x), .y(y), 
+    Enemy_Bullet_Judge EnemyBullet (.clk(clk_out), .rst(rst), .clk2(clk_move_bullet), .x(x), .y(y), .enemyplane_exist(ep_exist),
                                     .ep_x(enemy_x), .ep_y(enemy_y + 10'd480), .startep_x(enemy_x + 23), .startep_y(enemy_y + 10'd520), .collide(eb_collide),
                                     .eb_x(ebullet_x), .eb_y(ebullet_y), .enemy_bullet_en(enemybullet_en), .enemy_bullet_rgb(enemybullet_rgb), .enemybullet_exist(eb_exist) );
 

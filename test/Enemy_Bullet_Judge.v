@@ -4,6 +4,7 @@ module Enemy_Bullet_Judge (
     input [9:0] ep_x,ep_y,
     input [9:0] startep_x,startep_y,
     input [9:0] x,y,
+    input enemyplane_exist,  //1 for enemy plane exist
     input collide,  //0 for enemy bullet collide, 1 for enemy bullet exist
     output reg [9:0] eb_x,eb_y,
     output enemy_bullet_en,  //1 for enemy bullet can show on the VGA
@@ -36,7 +37,7 @@ module Enemy_Bullet_Judge (
         else begin
             eb_x_next <= eb_x;
             eb_y_next <= eb_y;
-            if(counter == 640)begin
+            if(counter == 480)begin
                 eb_x_next <= ep_x + 10'd23;
                 eb_y_next <= ep_y + 10'd40;
                 collide_EN <= 1'b0;
@@ -54,7 +55,7 @@ module Enemy_Bullet_Judge (
         enemy_bullet_rgb <= 12'b111111111111;  //need to be specified
     end
 
-    assign enemy_bullet_en = (x >= eb_x && x < eb_x + 10 && y + 480 >= eb_y && y + 480 < eb_y + 40 && eb_y <= 960 & ~collide_EN);
-    assign enemybullet_exist = (collide_EN == 1'b0);
+    assign enemy_bullet_en = (x >= eb_x && x < eb_x + 10 && y + 480 >= eb_y && y + 480 < eb_y + 40 && eb_y <= 960 & ~collide_EN & enemyplane_exist);
+    assign enemybullet_exist = (collide_EN == 1'b0 & enemyplane_exist);
     
 endmodule
